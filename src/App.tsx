@@ -281,6 +281,7 @@ function App() {
 						key={index}
 						onClick={() => applyPreset(preset)}
 						style={{
+							fontFamily: "monospace",
 							marginRight: "10px",
 							padding: "5px",
 							position: "relative",
