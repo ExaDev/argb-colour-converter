@@ -21,10 +21,20 @@ function App() {
 	};
 
 	const handleIntChange = (e) => {
-		const intValue = parseInt(e.target.value, 10);
-		if (!isNaN(intValue)) {
-			setIntColor(intValue);
-			updateFromInt(intValue);
+		const value = e.target.value;
+		if (value === '') {
+			// Reset the color values when the input is empty
+			setIntColor(0);
+			setAlpha(0);
+			setRed(0);
+			setGreen(0);
+			setBlue(0);
+		} else {
+			const intValue = parseInt(value, 10);
+			if (!isNaN(intValue)) {
+				setIntColor(intValue);
+				updateFromInt(intValue);
+			}
 		}
 	};
 
