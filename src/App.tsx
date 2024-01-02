@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './App.css';
+import { useEffect, useState } from "react";
 
 function App() {
 	const [alpha, setAlpha] = useState(128);
@@ -7,6 +8,16 @@ function App() {
 	const [green, setGreen] = useState(255);
 	const [blue, setBlue] = useState(128);
 	const [intColor, setIntColor] = useState(0);
+	const [backgroundColor, setBackgroundColor] = useState("rgba(0,0,0,1)");
+
+	useEffect(() => {
+		updateBackgroundColor();
+	}, [alpha, red, green, blue]);
+
+	const updateBackgroundColor = () => {
+		const rgbaColor = `rgba(${red}, ${green}, ${blue}, ${alpha / 255})`;
+		setBackgroundColor(rgbaColor);
+	};
 
 	const updateFromARGB = () => {
 		const hexValue = (alpha << 24 | red << 16 | green << 8 | blue) >>> 0;
@@ -61,6 +72,24 @@ function App() {
 	return (
 		<div>
 			<h1>ARGB Color Converter</h1>
+			<div
+				style={{
+					background: `linear-gradient(45deg, #808080 25%, transparent 25%, transparent 75%, #808080 75%, #808080), linear-gradient(45deg, #808080 25%, transparent 25%, transparent 75%, #808080 75%, #808080)`,
+					backgroundSize: "20px 20px",
+					backgroundPosition: "0 0, 10px 10px",
+					width: "100px",
+					height: "100px",
+					border: "1px solid black",
+				}}
+			>
+				<div
+					style={{
+						width: "100%",
+						height: "100%",
+						backgroundColor: backgroundColor,
+					}}
+				></div>
+			</div>
 			<div>
 				<label>
 					Alpha:
