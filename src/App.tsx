@@ -22,9 +22,9 @@ type ArgbPreset = ArgbColour & {
 function Heading(): ReactElement {
 	return (
 		<>
-			<h1>Simple ARGB Signed Integer Color Converter</h1>
+			<h1>Simple ARGB Signed Integer Colour Converter</h1>
 			<p>
-				Convert between integer and hexadecimal ARGB color values.
+				Convert between integer and hexadecimal ARGB colour values.
 				Useful for Android development.
 			</p>
 			<p>
@@ -34,7 +34,7 @@ function Heading(): ReactElement {
 					target="_blank"
 					rel="noopener noreferrer"
 				>
-					Android Color Documentation
+					Android Colour Documentation
 				</a>
 				.
 			</p>
