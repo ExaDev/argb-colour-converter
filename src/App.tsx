@@ -272,7 +272,6 @@ function App() {
 				return;
 			}
 			setArgb(argb);
-			updateBackgroundColor();
 			setIntColour(convertArgbToInt(argb));
 		}
 	}
@@ -290,10 +289,9 @@ function App() {
 	}
 
 	function updateFromInt(intValue: number) {
-		const { alpha, red, green, blue } = convertIntToArgb(intValue);
-		setArgb({ alpha, red, green, blue });
-		const hexValue = convertArgbToHex({ alpha, red, green, blue });
-		setHexColour(hexValue);
+		const argb = convertIntToArgb(intValue);
+		setArgb(argb);
+		setHexColour(convertArgbToHex(argb));
 	}
 
 	function handleIntChange(e: ChangeEvent<HTMLInputElement>) {
@@ -314,7 +312,7 @@ function App() {
 		}
 	}
 
-	function handleChange(
+	function handleArgbChange(
 		color: "alpha" | "red" | "green" | "blue",
 		e: ChangeEvent<HTMLInputElement>
 	) {
@@ -420,19 +418,19 @@ function App() {
 			<ColourControl
 				alpha={alpha}
 				onAlphaChange={(e: ChangeEvent<HTMLInputElement>) =>
-					handleChange("alpha", e)
+					handleArgbChange("alpha", e)
 				}
 				red={red}
 				onRedChange={(e: ChangeEvent<HTMLInputElement>) =>
-					handleChange("red", e)
+					handleArgbChange("red", e)
 				}
 				green={green}
 				onGreenChange={(e: ChangeEvent<HTMLInputElement>) =>
-					handleChange("green", e)
+					handleArgbChange("green", e)
 				}
 				blue={blue}
 				onBlueChange={(e: ChangeEvent<HTMLInputElement>) =>
-					handleChange("blue", e)
+					handleArgbChange("blue", e)
 				}
 				intColour={intColour}
 				onIntChange={handleIntChange}
