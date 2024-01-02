@@ -245,25 +245,11 @@ function App() {
 	const [red, setRed] = useState(InitialColour.red);
 	const [green, setGreen] = useState(InitialColour.green);
 	const [blue, setBlue] = useState(InitialColour.blue);
-	const [intColour, setIntColour] = useState(
-		convertArgbToInt(
-			InitialColour.alpha,
-			InitialColour.red,
-			InitialColour.green,
-			InitialColour.blue
-		)
-	);
+	const [intColour, setIntColour] = useState(convertArgbToInt(InitialColour));
 	const [backgroundColor, setBackgroundColor] = useState(
 		ArgbToRgbaBackgroundColour(InitialColour)
 	);
-	const [hexColour, setHexColour] = useState(
-		convertArgbToHex(
-			InitialColour.alpha,
-			InitialColour.red,
-			InitialColour.green,
-			InitialColour.blue
-		)
-	);
+	const [hexColour, setHexColour] = useState(convertArgbToHex(InitialColour));
 
 	useEffect(() => {
 		updateBackgroundColor();
@@ -285,31 +271,28 @@ function App() {
 			if (!argb) {
 				return;
 			}
-			setAlpha(argb.alpha);
-			setRed(argb.red);
-			setGreen(argb.green);
-			setBlue(argb.blue);
+			setArgb(argb);
 			updateBackgroundColor();
-			setIntColour(
-				convertArgbToInt(argb.alpha, argb.red, argb.green, argb.blue)
-			);
+			setIntColour(convertArgbToInt(argb));
 		}
 	}
 
 	function updateFromARGB() {
-		const hexValue = convertArgbToHex(alpha, red, green, blue);
-		setHexColour(hexValue);
-		const intValue = convertArgbToInt(alpha, red, green, blue);
-		setIntColour(intValue);
+		setHexColour(convertArgbToHex({ alpha, red, green, blue }));
+		setIntColour(convertArgbToInt({ alpha, red, green, blue }));
 	}
 
-	function updateFromInt(intValue: number) {
-		const { alpha, red, green, blue } = convertIntToArgb(intValue);
+	function setArgb({ alpha, red, green, blue }: ArgbColour) {
 		setAlpha(alpha);
 		setRed(red);
 		setGreen(green);
 		setBlue(blue);
-		const hexValue = convertArgbToHex(alpha, red, green, blue);
+	}
+
+	function updateFromInt(intValue: number) {
+		const { alpha, red, green, blue } = convertIntToArgb(intValue);
+		setArgb({ alpha, red, green, blue });
+		const hexValue = convertArgbToHex({ alpha, red, green, blue });
 		setHexColour(hexValue);
 	}
 
@@ -379,23 +362,9 @@ function App() {
 		setGreen(preset.green);
 		setBlue(preset.blue);
 
-		setIntColour(
-			convertArgbToInt(
-				preset.alpha,
-				preset.red,
-				preset.green,
-				preset.blue
-			)
-		);
+		setIntColour(convertArgbToInt(preset));
 
-		setHexColour(
-			convertArgbToHex(
-				preset.alpha,
-				preset.red,
-				preset.green,
-				preset.blue
-			)
-		);
+		setHexColour(convertArgbToHex(preset));
 	}
 
 	function getColorStyle() {
@@ -417,8 +386,7 @@ function App() {
 			left: 0,
 			width: "100%",
 			height: "100%",
-			backgroundColor: `rgba(${preset.red}, ${preset.green}, ${preset.blue
-				}, ${preset.alpha / 255})`,
+			backgroundColor: ArgbToRgba(preset),
 		};
 	}
 
@@ -491,21 +459,11 @@ function convertIntToArgb(intValue: number): {
 	return { alpha, red, green, blue };
 }
 
-function convertArgbToInt(
-	alpha: number,
-	red: number,
-	green: number,
-	blue: number
-): number {
+function convertArgbToInt({ alpha, red, green, blue }: ArgbColour): number {
 	return ((alpha << 24) | (red << 16) | (green << 8) | blue) >>> 0;
 }
 
-function convertArgbToHex(
-	alpha: number,
-	red: number,
-	green: number,
-	blue: number
-) {
+function convertArgbToHex({ alpha, red, green, blue }: ArgbColour): string {
 	return (
 		"#" +
 		[alpha, red, green, blue]
