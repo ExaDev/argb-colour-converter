@@ -73,28 +73,46 @@ function App() {
 		<div>
 			<h1>ARGB Color Converter</h1>
 			<p>
-				Convert between integer and hexadecimal ARGB color values. Useful for Android development.
+				Convert between integer and hexadecimal ARGB color values.
+				Useful for Android development.
 			</p>
 			<p>
-				For more details, see the <a href="https://developer.android.com/reference/android/graphics/Color" target="_blank" rel="noopener noreferrer">Android Color Documentation</a>.
+				For more details, see the{" "}
+				<a
+					href="https://developer.android.com/reference/android/graphics/Color"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					Android Color Documentation
+				</a>
+				.
 			</p>
 			<div
 				style={{
-					background: `linear-gradient(45deg, #808080 25%, transparent 25%, transparent 75%, #808080 75%, #808080), linear-gradient(45deg, #808080 25%, transparent 25%, transparent 75%, #808080 75%, #808080)`,
-					backgroundSize: "20px 20px",
-					backgroundPosition: "0 0, 10px 10px",
-					width: "100px",
-					height: "100px",
-					border: "1px solid black",
+					display: "flex",
+					justifyContent: "center",
+					alignItems: "center",
+					height: "150px",
 				}}
 			>
 				<div
 					style={{
-						width: "100%",
-						height: "100%",
-						backgroundColor: backgroundColor,
+						background: `linear-gradient(45deg, #808080 25%, transparent 25%, transparent 75%, #808080 75%, #808080),linear-gradient(45deg, #808080 25%, transparent 25%, transparent 75%, #808080 75%, #808080)`,
+						backgroundSize: "20px 20px",
+						backgroundPosition: "0 0, 10px 10px",
+						width: "100px",
+						height: "100px",
+						border: "1px solid black",
 					}}
-				></div>
+				>
+					<div
+						style={{
+							width: "100%",
+							height: "100%",
+							backgroundColor: backgroundColor,
+						}}
+					></div>
+				</div>
 			</div>
 			<div>
 				<label>
@@ -154,7 +172,12 @@ function App() {
 
 export default App;
 
-function convertIntToArgb(intValue: number): { alpha: number; red: number; green: number; blue: number; } {
+function convertIntToArgb(intValue: number): {
+	alpha: number;
+	red: number;
+	green: number;
+	blue: number;
+} {
 	const alpha = (intValue >> 24) & 0xff;
 	const red = (intValue >> 16) & 0xff;
 	const green = (intValue >> 8) & 0xff;
