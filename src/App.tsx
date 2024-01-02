@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import './App.css';
+import "./App.css";
+
 import { useEffect, useState } from "react";
 
 function App() {
@@ -18,7 +18,6 @@ function App() {
 		const rgbaColor = `rgba(${red}, ${green}, ${blue}, ${alpha / 255})`;
 		setBackgroundColor(rgbaColor);
 	};
-
 	const updateFromARGB = () => {
 		const hexValue = convertArgbToInt(alpha, red, green, blue);
 		setIntColor(hexValue);
@@ -50,22 +49,22 @@ function App() {
 		}
 	};
 
-	const handleAlphaChange = (e) => {
+	const handleAlphaChange = (e: { target: { value: string; }; }) => {
 		setAlpha(parseInt(e.target.value, 10));
 		updateFromARGB();
 	};
 
-	const handleRedChange = (e) => {
+	const handleRedChange = (e: { target: { value: string; }; }) => {
 		setRed(parseInt(e.target.value, 10));
 		updateFromARGB();
 	};
 
-	const handleGreenChange = (e) => {
+	const handleGreenChange = (e: { target: { value: string; }; }) => {
 		setGreen(parseInt(e.target.value, 10));
 		updateFromARGB();
 	};
 
-	const handleBlueChange = (e) => {
+	const handleBlueChange = (e: { target: { value: string; }; }) => {
 		setBlue(parseInt(e.target.value, 10));
 		updateFromARGB();
 	};
@@ -73,6 +72,12 @@ function App() {
 	return (
 		<div>
 			<h1>ARGB Color Converter</h1>
+			<p>
+				Convert between integer and hexadecimal ARGB color values. Useful for Android development.
+			</p>
+			<p>
+				For more details, see the <a href="https://developer.android.com/reference/android/graphics/Color" target="_blank" rel="noopener noreferrer">Android Color Documentation</a>.
+			</p>
 			<div
 				style={{
 					background: `linear-gradient(45deg, #808080 25%, transparent 25%, transparent 75%, #808080 75%, #808080), linear-gradient(45deg, #808080 25%, transparent 25%, transparent 75%, #808080 75%, #808080)`,
@@ -94,25 +99,53 @@ function App() {
 			<div>
 				<label>
 					Alpha:
-					<input type="number" value={alpha} onChange={handleAlphaChange} min="0" max="255" />
+					<input
+						type="number"
+						value={alpha}
+						onChange={handleAlphaChange}
+						min="0"
+						max="255"
+					/>
 				</label>
 				<label>
 					Red:
-					<input type="number" value={red} onChange={handleRedChange} min="0" max="255" />
+					<input
+						type="number"
+						value={red}
+						onChange={handleRedChange}
+						min="0"
+						max="255"
+					/>
 				</label>
 				<label>
 					Green:
-					<input type="number" value={green} onChange={handleGreenChange} min="0" max="255" />
+					<input
+						type="number"
+						value={green}
+						onChange={handleGreenChange}
+						min="0"
+						max="255"
+					/>
 				</label>
 				<label>
 					Blue:
-					<input type="number" value={blue} onChange={handleBlueChange} min="0" max="255" />
+					<input
+						type="number"
+						value={blue}
+						onChange={handleBlueChange}
+						min="0"
+						max="255"
+					/>
 				</label>
 			</div>
 			<div>
 				<label>
 					Integer Color:
-					<input type="number" value={intColor} onChange={handleIntChange} />
+					<input
+						type="number"
+						value={intColor}
+						onChange={handleIntChange}
+					/>
 				</label>
 			</div>
 		</div>
