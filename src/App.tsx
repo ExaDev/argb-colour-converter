@@ -78,7 +78,7 @@ function Swatch({
 	);
 }
 
-function ColorInput({
+function ColourInput({
 	label,
 	value,
 	onChange,
@@ -118,27 +118,29 @@ function ArgbInput(props: {
 }) {
 	return (
 		<>
-			<div style={{
-				display: "flex",
-				justifyContent: "center",
-				gap: "10px"
-			}}>
-				<ColorInput
+			<div
+				style={{
+					display: "flex",
+					justifyContent: "center",
+					gap: "10px",
+				}}
+			>
+				<ColourInput
 					label="Alpha"
 					value={props.alpha}
 					onChange={props.onAlphaChange}
 				/>
-				<ColorInput
+				<ColourInput
 					label="Red"
 					value={props.red}
 					onChange={props.onRedChange}
 				/>
-				<ColorInput
+				<ColourInput
 					label="Green"
 					value={props.green}
 					onChange={props.onGreenChange}
 				/>
-				<ColorInput
+				<ColourInput
 					label="Blue"
 					value={props.blue}
 					onChange={props.onBlueChange}
@@ -252,18 +254,18 @@ function App() {
 	const [green, setGreen] = useState(InitialColour.green);
 	const [blue, setBlue] = useState(InitialColour.blue);
 	const [intColour, setIntColour] = useState(convertArgbToInt(InitialColour));
-	const [backgroundColor, setBackgroundColor] = useState(
+	const [backgroundColour, setBackgroundColour] = useState(
 		ArgbToRgbaBackgroundColour(InitialColour)
 	);
 	const [hexColour, setHexColour] = useState(convertArgbToHex(InitialColour));
 
 	useEffect(() => {
-		updateBackgroundColor();
+		updateBackgroundColour();
 	}, [alpha, red, green, blue]);
 
-	function updateBackgroundColor() {
-		const rgbaColor = `rgba(${red}, ${green}, ${blue}, ${alpha / 255})`;
-		setBackgroundColor(rgbaColor);
+	function updateBackgroundColour() {
+		const rgbaColour = `rgba(${red}, ${green}, ${blue}, ${alpha / 255})`;
+		setBackgroundColour(rgbaColour);
 	}
 
 	function handleHexChange(e: ChangeEvent<HTMLInputElement>) {
@@ -303,7 +305,6 @@ function App() {
 	function handleIntChange(e: ChangeEvent<HTMLInputElement>) {
 		const value = e.target.value;
 		if (value === "") {
-			// Reset the color values when the input is empty
 			setIntColour(0);
 			setAlpha(0);
 			setRed(0);
@@ -319,12 +320,12 @@ function App() {
 	}
 
 	function handleArgbChange(
-		color: "alpha" | "red" | "green" | "blue",
+		colour: "alpha" | "red" | "green" | "blue",
 		e: ChangeEvent<HTMLInputElement>
 	) {
 		const value = parseInt(e.target.value, 10);
 
-		switch (color) {
+		switch (colour) {
 			case "alpha":
 				setAlpha(value);
 				break;
@@ -338,7 +339,7 @@ function App() {
 				setBlue(value);
 				break;
 			default:
-				throw new Error("Invalid color channel");
+				throw new Error("Invalid colour channel");
 		}
 
 		updateFromARGB();
@@ -371,7 +372,7 @@ function App() {
 		setHexColour(convertArgbToHex(preset));
 	}
 
-	function getColorStyle() {
+	function getColourStyle() {
 		return {
 			background: `linear-gradient(45deg, #808080 25%, transparent 25%, transparent 75%, #808080 75%, #808080),linear-gradient(45deg, #808080 25%, transparent 25%, transparent 75%, #808080 75%, #808080)`,
 			backgroundSize: "10px 10px",
@@ -384,7 +385,7 @@ function App() {
 		};
 	}
 
-	function getColorOverlayStyle(preset: ArgbPreset) {
+	function getColourOverlayStyle(preset: ArgbPreset) {
 		return {
 			top: 0,
 			left: 0,
@@ -409,8 +410,8 @@ function App() {
 					position: "relative",
 				}}
 			>
-				<div style={getColorStyle()}>
-					<div style={getColorOverlayStyle(preset)}></div>
+				<div style={getColourStyle()}>
+					<div style={getColourOverlayStyle(preset)}></div>
 				</div>
 				{preset.name}
 			</button>
@@ -420,7 +421,7 @@ function App() {
 	return (
 		<div>
 			<Heading />
-			<Swatch backgroundColor={backgroundColor} />
+			<Swatch backgroundColor={backgroundColour} />
 			<ColourControl
 				alpha={alpha}
 				onAlphaChange={(e: ChangeEvent<HTMLInputElement>) =>
