@@ -14,24 +14,24 @@ function App() {
 		updateBackgroundColor();
 	}, [alpha, red, green, blue]);
 
-	const updateBackgroundColor = () => {
+	function updateBackgroundColor() {
 		const rgbaColor = `rgba(${red}, ${green}, ${blue}, ${alpha / 255})`;
 		setBackgroundColor(rgbaColor);
-	};
-	const updateFromARGB = () => {
+	}
+	function updateFromARGB() {
 		const hexValue = convertArgbToInt(alpha, red, green, blue);
 		setIntColor(hexValue);
-	};
+	}
 
-	const updateFromInt = (intValue: number) => {
+	function updateFromInt(intValue: number) {
 		const { alpha, red, green, blue } = convertIntToArgb(intValue);
 		setAlpha(alpha);
 		setRed(red);
 		setGreen(green);
 		setBlue(blue);
-	};
+	}
 
-	const handleIntChange = (e: { target: { value: any; }; }) => {
+	function handleIntChange(e: { target: { value: any; }; }) {
 		const value = e.target.value;
 		if (value === "") {
 			// Reset the color values when the input is empty
@@ -47,27 +47,27 @@ function App() {
 				updateFromInt(intValue);
 			}
 		}
-	};
+	}
 
-	const handleAlphaChange = (e: { target: { value: string; }; }) => {
+	function handleAlphaChange(e: { target: { value: string; }; }) {
 		setAlpha(parseInt(e.target.value, 10));
 		updateFromARGB();
-	};
+	}
 
-	const handleRedChange = (e: { target: { value: string; }; }) => {
+	function handleRedChange(e: { target: { value: string; }; }) {
 		setRed(parseInt(e.target.value, 10));
 		updateFromARGB();
-	};
+	}
 
-	const handleGreenChange = (e: { target: { value: string; }; }) => {
+	function handleGreenChange(e: { target: { value: string; }; }) {
 		setGreen(parseInt(e.target.value, 10));
 		updateFromARGB();
-	};
+	}
 
-	const handleBlueChange = (e: { target: { value: string; }; }) => {
+	function handleBlueChange(e: { target: { value: string; }; }) {
 		setBlue(parseInt(e.target.value, 10));
 		updateFromARGB();
-	};
+	}
 
 	const presets: ArgbPreset[] = [
 		{ name: "Red", alpha: 255, red: 255, green: 0, blue: 0 },
@@ -85,7 +85,7 @@ function App() {
 		{ name: "Semi-Transparent", alpha: 128, red: 0, green: 0, blue: 0 },
 	];
 
-	const applyPreset = (preset: ArgbPreset) => {
+	function applyPreset(preset: ArgbPreset) {
 		setAlpha(preset.alpha);
 		setRed(preset.red);
 		setGreen(preset.green);
@@ -97,9 +97,9 @@ function App() {
 			preset.green,
 			preset.blue
 		));
-	};
+	}
 
-	const getColorStyle = () => {
+	function getColorStyle() {
 		return {
 			background: `linear-gradient(45deg, #808080 25%, transparent 25%, transparent 75%, #808080 75%, #808080),linear-gradient(45deg, #808080 25%, transparent 25%, transparent 75%, #808080 75%, #808080)`,
 			backgroundSize: "10px 10px",
@@ -110,7 +110,8 @@ function App() {
 			marginRight: "10px",
 			border: "1px solid black"
 		};
-	};
+	}
+
 	type ArgbColour = {
 		alpha: number;
 		red: number;
@@ -122,16 +123,15 @@ function App() {
 		name?: string;
 	};
 
-	const getColorOverlayStyle = (preset: ArgbPreset) => {
+	function getColorOverlayStyle(preset: ArgbPreset) {
 		return {
 			top: 0,
 			left: 0,
 			width: "100%",
 			height: "100%",
-			backgroundColor: `rgba(${preset.red}, ${preset.green}, ${preset.blue
-				}, ${preset.alpha / 255})`,
+			backgroundColor: `rgba(${preset.red}, ${preset.green}, ${preset.blue}, ${preset.alpha / 255})`,
 		};
-	};
+	}
 
 	return (
 		<div>
