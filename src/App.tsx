@@ -70,9 +70,19 @@ function App() {
 	};
 
 	const presets: ArgbPreset[] = [
-		{ name: "Red", alpha: 128, red: 255, green: 0, blue: 0 },
+		{ name: "Red", alpha: 255, red: 255, green: 0, blue: 0 },
 		{ name: "Green", alpha: 255, red: 0, green: 255, blue: 0 },
 		{ name: "Blue", alpha: 255, red: 0, green: 0, blue: 255 },
+		{ name: "Yellow", alpha: 255, red: 255, green: 255, blue: 0 },
+		{ name: "Cyan", alpha: 255, red: 0, green: 255, blue: 255 },
+		{ name: "Magenta", alpha: 255, red: 255, green: 0, blue: 255 },
+		{ name: "White", alpha: 255, red: 255, green: 255, blue: 255 },
+		{ name: "Black", alpha: 255, red: 0, green: 0, blue: 0 },
+		{ name: "Grey", alpha: 255, red: 128, green: 128, blue: 128 },
+		{ name: "Light Grey", alpha: 255, red: 192, green: 192, blue: 192 },
+		{ name: "Dark Grey", alpha: 255, red: 64, green: 64, blue: 64 },
+		{ name: "Transparent", alpha: 0, red: 0, green: 0, blue: 0 },
+		{ name: "Semi-Transparent", alpha: 128, red: 0, green: 0, blue: 0 },
 	];
 
 	const applyPreset = (preset: ArgbPreset) => {
