@@ -69,6 +69,34 @@ function App() {
 		updateFromARGB();
 	};
 
+	const presets = [
+		{ name: 'Red', alpha: 128, red: 255, green: 0, blue: 0 },
+		{ name: 'Green', alpha: 255, red: 0, green: 255, blue: 0 },
+		{ name: 'Blue', alpha: 255, red: 0, green: 0, blue: 255 },
+		// Add more presets as needed
+	];
+
+	const applyPreset = (preset) => {
+		setAlpha(preset.alpha);
+		setRed(preset.red);
+		setGreen(preset.green);
+		setBlue(preset.blue);
+
+		const intFromPreset = ((preset.alpha << 24) | (preset.red << 16) | (preset.green << 8) | preset.blue) >>> 0;
+		setIntColor(intFromPreset);
+	};
+
+	const getColorStyle = (preset) => {
+		return {
+			backgroundColor: `rgba(${preset.red}, ${preset.green}, ${preset.blue}, ${preset.alpha / 255})`,
+			width: '20px',
+			height: '20px',
+			display: 'inline-block',
+			marginRight: '10px',
+			border: '1px solid black'
+		};
+	};
+
 	return (
 		<div>
 			<h1>ARGB Color Converter</h1>
@@ -165,6 +193,15 @@ function App() {
 						onChange={handleIntChange}
 					/>
 				</label>
+			</div>
+			<div>
+				<h2>Presets</h2>
+				{presets.map((preset, index) => (
+					<button key={index} onClick={() => applyPreset(preset)} style={{ marginRight: '10px', padding: '5px' }}>
+						<div style={getColorStyle(preset)}></div>
+						{preset.name}
+					</button>
+				))}
 			</div>
 		</div>
 	);
