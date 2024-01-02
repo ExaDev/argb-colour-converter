@@ -19,6 +19,19 @@ type ArgbPreset = ArgbColour & {
 	name?: string;
 };
 
+function CopyButton({ value }: { value: string | number }) {
+	const [copied, setCopied] = useState(false);
+
+	const handleCopy = () => {
+		navigator.clipboard.writeText(value.toString()).then(() => {
+			setCopied(true);
+			setTimeout(() => setCopied(false), 2000); // Reset the copied state after 2 seconds
+		});
+	};
+
+	return <button onClick={handleCopy}>{copied ? "Copied!" : "Copy"}</button>;
+}
+
 function Heading(): ReactElement {
 	return (
 		<>
@@ -148,6 +161,9 @@ function ArgbInput({
 					value={argb.blue}
 					onChange={onBlueChange}
 				/>
+				<CopyButton
+					value={`${argb.alpha}, ${argb.red}, ${argb.green}, ${argb.blue}`}
+				/>
 			</div>
 		</>
 	);
@@ -164,6 +180,7 @@ function IntegerInput({
 		<div>
 			<label>Integer:</label>
 			<input type="number" value={value} onChange={onChange} />
+			<CopyButton value={value} />
 		</div>
 	);
 }
@@ -179,6 +196,7 @@ function HexInput({
 		<div>
 			<label>Hex:</label>
 			<input type="text" value={value} onChange={onChange} />
+			<CopyButton value={value} />
 		</div>
 	);
 }
