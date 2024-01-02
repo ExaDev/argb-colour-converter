@@ -42,7 +42,9 @@ function Heading(): ReactElement {
 	);
 }
 
-function Swatch(props: {
+function Swatch({
+	backgroundColor,
+}: {
 	backgroundColor: Property.BackgroundColor;
 }): ReactElement {
 	return (
@@ -68,7 +70,7 @@ function Swatch(props: {
 					style={{
 						width: "100%",
 						height: "100%",
-						backgroundColor: props.backgroundColor,
+						backgroundColor,
 					}}
 				></div>
 			</div>
