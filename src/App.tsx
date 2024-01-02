@@ -19,12 +19,14 @@ function App() {
 		const rgbaColor = `rgba(${red}, ${green}, ${blue}, ${alpha / 255})`;
 		setBackgroundColor(rgbaColor);
 	}
+
 	function handleHexChange(e: { target: { value: any; }; }) {
 		const value = e.target.value;
+		setHexColor(value);
+
 		if (/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.test(value)) {
-			setHexColor(value);
 			const argb = convertHexToArgb(value);
-			if (argb === null) {
+			if (!argb) {
 				return;
 			}
 			setAlpha(argb.alpha);
@@ -32,8 +34,10 @@ function App() {
 			setGreen(argb.green);
 			setBlue(argb.blue);
 			updateBackgroundColor();
+			setIntColor(convertArgbToInt(argb.alpha, argb.red, argb.green, argb.blue));
 		}
 	}
+
 
 	function updateFromARGB() {
 		const hexValue = convertArgbToHex(alpha, red, green, blue);
