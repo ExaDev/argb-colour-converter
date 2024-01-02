@@ -9,6 +9,7 @@ function App() {
 	const [blue, setBlue] = useState(128);
 	const [intColor, setIntColor] = useState(0);
 	const [backgroundColor, setBackgroundColor] = useState("rgba(0,0,0,1)");
+	const [hexColor, setHexColor] = useState("#80808080");
 
 	useEffect(() => {
 		updateBackgroundColor();
@@ -18,9 +19,27 @@ function App() {
 		const rgbaColor = `rgba(${red}, ${green}, ${blue}, ${alpha / 255})`;
 		setBackgroundColor(rgbaColor);
 	}
+	function handleHexChange(e: { target: { value: any; }; }) {
+		const value = e.target.value;
+		if (/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.test(value)) {
+			setHexColor(value);
+			const argb = convertHexToArgb(value);
+			if (argb === null) {
+				return;
+			}
+			setAlpha(argb.alpha);
+			setRed(argb.red);
+			setGreen(argb.green);
+			setBlue(argb.blue);
+			updateBackgroundColor();
+		}
+	}
+
 	function updateFromARGB() {
-		const hexValue = convertArgbToInt(alpha, red, green, blue);
-		setIntColor(hexValue);
+		const hexValue = convertArgbToHex(alpha, red, green, blue);
+		setHexColor(hexValue);
+		const intValue = convertArgbToInt(alpha, red, green, blue);
+		setIntColor(intValue);
 	}
 
 	function updateFromInt(intValue: number) {
@@ -29,6 +48,8 @@ function App() {
 		setRed(red);
 		setGreen(green);
 		setBlue(blue);
+		const hexValue = convertArgbToHex(alpha, red, green, blue);
+		setHexColor(hexValue);
 	}
 
 	function handleIntChange(e: { target: { value: any; }; }) {
@@ -97,6 +118,13 @@ function App() {
 			preset.green,
 			preset.blue
 		));
+
+		setHexColor(convertArgbToHex(
+			preset.alpha,
+			preset.red,
+			preset.green,
+			preset.blue
+		));
 	}
 
 	function getColorStyle() {
@@ -132,6 +160,7 @@ function App() {
 			backgroundColor: `rgba(${preset.red}, ${preset.green}, ${preset.blue}, ${preset.alpha / 255})`,
 		};
 	}
+
 
 	return (
 		<div>
@@ -231,6 +260,17 @@ function App() {
 				</label>
 			</div>
 			<div>
+				<label>
+					HEX Color:
+					<input
+						type="text"
+						value={hexColor}
+						onChange={handleHexChange}
+					/>
+				</label>
+			</div>
+
+			<div>
 				<h2>Presets</h2>
 				{presets.map((preset, index) => (
 					<button
@@ -275,4 +315,18 @@ function convertArgbToInt(
 	blue: number
 ): number {
 	return ((alpha << 24) | (red << 16) | (green << 8) | blue) >>> 0;
+}
+
+function convertArgbToHex(alpha: number, red: number, green: number, blue: number) {
+	return '#' + [alpha, red, green, blue].map(x => x.toString(16).padStart(2, '0')).join('');
+}
+
+function convertHexToArgb(hex: string): { alpha: number; red: number; green: number; blue: number; } | null {
+	let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	return result ? {
+		alpha: parseInt(result[1], 16),
+		red: parseInt(result[2], 16),
+		green: parseInt(result[3], 16),
+		blue: parseInt(result[4], 16)
+	} : null;
 }
