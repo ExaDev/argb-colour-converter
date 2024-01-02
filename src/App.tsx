@@ -116,7 +116,11 @@ function ArgbInput(props: {
 }) {
 	return (
 		<>
-			<div style={{ display: "flex", gap: "10px" }}>
+			<div style={{
+				display: "flex",
+				justifyContent: "center",
+				gap: "10px"
+			}}>
 				<ColorInput
 					label="Alpha"
 					value={props.alpha}
