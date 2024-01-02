@@ -20,11 +20,11 @@ function App() {
 		setBackgroundColor(rgbaColor);
 	}
 
-	function handleHexChange(e: { target: { value: any; }; }) {
-		const value = e.target.value;
+	function handleHexChange(e: { target: { value: string; }; }) {
+		const value = e.target.value.toUpperCase();
 		setHexColor(value);
 
-		if (/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.test(value)) {
+		if (/^#?([A-F\d]{2})([A-F\d]{2})([A-F\d]{2})([A-F\d]{2})$/i.test(value)) {
 			const argb = convertHexToArgb(value);
 			if (!argb) {
 				return;
@@ -322,7 +322,7 @@ function convertArgbToInt(
 }
 
 function convertArgbToHex(alpha: number, red: number, green: number, blue: number) {
-	return '#' + [alpha, red, green, blue].map(x => x.toString(16).padStart(2, '0')).join('');
+	return '#' + [alpha, red, green, blue].map(x => x.toString(16).padStart(2, '0')).join('').toUpperCase();
 }
 
 function convertHexToArgb(hex: string): { alpha: number; red: number; green: number; blue: number; } | null {
