@@ -20,20 +20,21 @@ function App() {
 	};
 
 	const updateFromARGB = () => {
-		const hexValue = (alpha << 24 | red << 16 | green << 8 | blue) >>> 0;
+		const hexValue = convertArgbToInt(alpha, red, green, blue);
 		setIntColor(hexValue);
 	};
 
-	const updateFromInt = (intValue) => {
-		setAlpha((intValue >> 24) & 0xFF);
-		setRed((intValue >> 16) & 0xFF);
-		setGreen((intValue >> 8) & 0xFF);
-		setBlue(intValue & 0xFF);
+	const updateFromInt = (intValue: number) => {
+		const { alpha, red, green, blue } = convertIntToArgb(intValue);
+		setAlpha(alpha);
+		setRed(red);
+		setGreen(green);
+		setBlue(blue);
 	};
 
-	const handleIntChange = (e) => {
+	const handleIntChange = (e: { target: { value: any; }; }) => {
 		const value = e.target.value;
-		if (value === '') {
+		if (value === "") {
 			// Reset the color values when the input is empty
 			setIntColor(0);
 			setAlpha(0);
@@ -119,3 +120,20 @@ function App() {
 }
 
 export default App;
+
+function convertIntToArgb(intValue: number): { alpha: number; red: number; green: number; blue: number; } {
+	const alpha = (intValue >> 24) & 0xff;
+	const red = (intValue >> 16) & 0xff;
+	const green = (intValue >> 8) & 0xff;
+	const blue = intValue & 0xff;
+	return { alpha, red, green, blue };
+}
+
+function convertArgbToInt(
+	alpha: number,
+	red: number,
+	green: number,
+	blue: number
+): number {
+	return ((alpha << 24) | (red << 16) | (green << 8) | blue) >>> 0;
+}
