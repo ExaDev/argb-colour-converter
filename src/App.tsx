@@ -106,14 +106,17 @@ function ColourInput({
 	);
 }
 
-function ArgbInput(props: {
-	alpha: number;
+function ArgbInput({
+	argb,
+	onAlphaChange,
+	onRedChange,
+	onGreenChange,
+	onBlueChange,
+}: {
+	argb: ArgbColour;
 	onAlphaChange: ChangeEventHandler;
-	red: number;
 	onRedChange: ChangeEventHandler;
-	green: number;
 	onGreenChange: ChangeEventHandler;
-	blue: number;
 	onBlueChange: ChangeEventHandler;
 }) {
 	return (
@@ -127,59 +130,74 @@ function ArgbInput(props: {
 			>
 				<ColourInput
 					label="Alpha"
-					value={props.alpha}
-					onChange={props.onAlphaChange}
+					value={argb.alpha}
+					onChange={onAlphaChange}
 				/>
 				<ColourInput
 					label="Red"
-					value={props.red}
-					onChange={props.onRedChange}
+					value={argb.red}
+					onChange={onRedChange}
 				/>
 				<ColourInput
 					label="Green"
-					value={props.green}
-					onChange={props.onGreenChange}
+					value={argb.green}
+					onChange={onGreenChange}
 				/>
 				<ColourInput
 					label="Blue"
-					value={props.blue}
-					onChange={props.onBlueChange}
+					value={argb.blue}
+					onChange={onBlueChange}
 				/>
 			</div>
 		</>
 	);
 }
 
-function IntegerInput(props: { value: number; onChange: ChangeEventHandler; }) {
+function IntegerInput({
+	value,
+	onChange,
+}: {
+	value: number;
+	onChange: ChangeEventHandler;
+}) {
 	return (
 		<div>
 			<label>Integer:</label>
-			<input
-				type="number"
-				value={props.value}
-				onChange={props.onChange}
-			/>
+			<input type="number" value={value} onChange={onChange} />
 		</div>
 	);
 }
 
-function HexInput(props: { value: string; onChange: ChangeEventHandler; }) {
+function HexInput({
+	value,
+	onChange,
+}: {
+	value: string;
+	onChange: ChangeEventHandler;
+}) {
 	return (
 		<div>
 			<label>Hex:</label>
-			<input type="text" value={props.value} onChange={props.onChange} />
+			<input type="text" value={value} onChange={onChange} />
 		</div>
 	);
 }
 
-function ColourControl(props: {
-	alpha: number;
+function ColourControl({
+	argb,
+	onAlphaChange,
+	onRedChange,
+	onGreenChange,
+	onBlueChange,
+	intColour,
+	onIntChange,
+	hexColour,
+	onHexChange,
+}: {
+	argb: ArgbColour;
 	onAlphaChange: ChangeEventHandler;
-	red: number;
 	onRedChange: ChangeEventHandler;
-	green: number;
 	onGreenChange: ChangeEventHandler;
-	blue: number;
 	onBlueChange: ChangeEventHandler;
 	intColour: number;
 	onIntChange: ChangeEventHandler;
@@ -194,26 +212,15 @@ function ColourControl(props: {
 				marginBottom: "20px",
 			}}
 		>
-			{/* ARGB Inputs */}
 			<ArgbInput
-				alpha={props.alpha}
-				onAlphaChange={props.onAlphaChange}
-				red={props.red}
-				onRedChange={props.onRedChange}
-				green={props.green}
-				onGreenChange={props.onGreenChange}
-				blue={props.blue}
-				onBlueChange={props.onBlueChange}
+				argb={argb}
+				onAlphaChange={onAlphaChange}
+				onRedChange={onRedChange}
+				onGreenChange={onGreenChange}
+				onBlueChange={onBlueChange}
 			/>
-
-			{/* Integer Input */}
-			<IntegerInput
-				value={props.intColour}
-				onChange={props.onIntChange}
-			/>
-
-			{/* Hex Input */}
-			<HexInput value={props.hexColour} onChange={props.onHexChange} />
+			<IntegerInput value={intColour} onChange={onIntChange} />
+			<HexInput value={hexColour} onChange={onHexChange} />
 		</div>
 	);
 }
@@ -249,8 +256,9 @@ const InitialColour: ArgbColour = {
 };
 
 function ArgbToRgba(colour: ArgbColour): DataType.Color {
-	return `rgba(${colour.red}, ${colour.green}, ${colour.blue}, ${colour.alpha / 255
-		})`;
+	return `rgba(${colour.red}, ${colour.green}, ${colour.blue}, ${
+		colour.alpha / 255
+	})`;
 }
 
 function ArgbToRgbaBackgroundColour(
@@ -421,7 +429,7 @@ function App() {
 					position: "relative",
 					display: "flex",
 					alignItems: "center",
-					justifyContent: "center"
+					justifyContent: "center",
 				}}
 			>
 				<div style={getColourStyle()}>
@@ -437,19 +445,16 @@ function App() {
 			<Heading />
 			<Swatch backgroundColor={backgroundColour} />
 			<ColourControl
-				alpha={alpha}
+				argb={{ alpha, red, green, blue }}
 				onAlphaChange={(e: ChangeEvent<HTMLInputElement>) =>
 					handleArgbChange("alpha", e)
 				}
-				red={red}
 				onRedChange={(e: ChangeEvent<HTMLInputElement>) =>
 					handleArgbChange("red", e)
 				}
-				green={green}
 				onGreenChange={(e: ChangeEvent<HTMLInputElement>) =>
 					handleArgbChange("green", e)
 				}
-				blue={blue}
 				onBlueChange={(e: ChangeEvent<HTMLInputElement>) =>
 					handleArgbChange("blue", e)
 				}
@@ -494,16 +499,16 @@ function convertArgbToHex({ alpha, red, green, blue }: ArgbColour): string {
 
 function convertHexToArgb(
 	hex: string
-): { alpha: number; red: number; green: number; blue: number; } | null {
+): { alpha: number; red: number; green: number; blue: number } | null {
 	const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(
 		hex
 	);
 	return result
 		? {
-			alpha: parseInt(result[1], 16),
-			red: parseInt(result[2], 16),
-			green: parseInt(result[3], 16),
-			blue: parseInt(result[4], 16),
-		}
+				alpha: parseInt(result[1], 16),
+				red: parseInt(result[2], 16),
+				green: parseInt(result[3], 16),
+				blue: parseInt(result[4], 16),
+		  }
 		: null;
 }
