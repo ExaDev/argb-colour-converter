@@ -1,15 +1,269 @@
+import { DataType, Property } from "csstype";
+import {
+	ChangeEvent,
+	ChangeEventHandler,
+	ReactElement,
+	useEffect,
+	useState,
+} from "react";
 import "./App.css";
 
-import { useEffect, useState } from "react";
+type ArgbColour = {
+	alpha: number;
+	red: number;
+	green: number;
+	blue: number;
+};
+
+type ArgbPreset = ArgbColour & {
+	name?: string;
+};
+
+function Heading(): ReactElement {
+	return (
+		<>
+			<h1>Simple ARGB Signed Integer Color Converter</h1>
+			<p>
+				Convert between integer and hexadecimal ARGB color values.
+				Useful for Android development.
+			</p>
+			<p>
+				For more details, see the{" "}
+				<a
+					href="https://developer.android.com/reference/android/graphics/Color"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					Android Color Documentation
+				</a>
+				.
+			</p>
+		</>
+	);
+}
+
+function Swatch(props: {
+	backgroundColor: Property.BackgroundColor;
+}): ReactElement {
+	return (
+		<div
+			style={{
+				display: "flex",
+				justifyContent: "center",
+				alignItems: "center",
+				height: "150px",
+			}}
+		>
+			<div
+				style={{
+					background: `linear-gradient(45deg, #808080 25%, transparent 25%, transparent 75%, #808080 75%, #808080),linear-gradient(45deg, #808080 25%, transparent 25%, transparent 75%, #808080 75%, #808080)`,
+					backgroundSize: "20px 20px",
+					backgroundPosition: "0 0, 10px 10px",
+					width: "100px",
+					height: "100px",
+					border: "1px solid black",
+				}}
+			>
+				<div
+					style={{
+						width: "100%",
+						height: "100%",
+						backgroundColor: props.backgroundColor,
+					}}
+				></div>
+			</div>
+		</div>
+	);
+}
+
+function ColorInput({
+	label,
+	value,
+	onChange,
+}: {
+	label: string;
+	value: number;
+	onChange: ChangeEventHandler;
+}) {
+	return (
+		<div>
+			<div>
+				<label>{label}:</label>
+				<input type="number" value={value} onChange={onChange} />
+			</div>
+			<div>
+				<input
+					type="range"
+					value={value}
+					onChange={onChange}
+					min="0"
+					max="255"
+				/>
+			</div>
+		</div>
+	);
+}
+
+function ArgbInput(props: {
+	alpha: number;
+	onAlphaChange: ChangeEventHandler;
+	red: number;
+	onRedChange: ChangeEventHandler;
+	green: number;
+	onGreenChange: ChangeEventHandler;
+	blue: number;
+	onBlueChange: ChangeEventHandler;
+}) {
+	return (
+		<>
+			<div style={{ display: "flex", gap: "10px" }}>
+				<ColorInput
+					label="Alpha"
+					value={props.alpha}
+					onChange={props.onAlphaChange}
+				/>
+				<ColorInput
+					label="Red"
+					value={props.red}
+					onChange={props.onRedChange}
+				/>
+				<ColorInput
+					label="Green"
+					value={props.green}
+					onChange={props.onGreenChange}
+				/>
+				<ColorInput
+					label="Blue"
+					value={props.blue}
+					onChange={props.onBlueChange}
+				/>
+			</div>
+		</>
+	);
+}
+
+function IntegerInput(props: { value: number; onChange: ChangeEventHandler; }) {
+	return (
+		<div>
+			<label>Integer:</label>
+			<input
+				type="number"
+				value={props.value}
+				onChange={props.onChange}
+			/>
+		</div>
+	);
+}
+
+function HexInput(props: { value: string; onChange: ChangeEventHandler; }) {
+	return (
+		<div>
+			<label>Hex:</label>
+			<input type="text" value={props.value} onChange={props.onChange} />
+		</div>
+	);
+}
+
+function ColourControl(props: {
+	alpha: number;
+	onAlphaChange: ChangeEventHandler;
+	red: number;
+	onRedChange: ChangeEventHandler;
+	green: number;
+	onGreenChange: ChangeEventHandler;
+	blue: number;
+	onBlueChange: ChangeEventHandler;
+	intColour: number;
+	onIntChange: ChangeEventHandler;
+	hexColour: string;
+	onHexChange: ChangeEventHandler;
+}): ReactElement {
+	return (
+		<div
+			style={{
+				display: "grid",
+				gap: "10px",
+				marginBottom: "20px",
+			}}
+		>
+			{/* ARGB Inputs */}
+			<ArgbInput
+				alpha={props.alpha}
+				onAlphaChange={props.onAlphaChange}
+				red={props.red}
+				onRedChange={props.onRedChange}
+				green={props.green}
+				onGreenChange={props.onGreenChange}
+				blue={props.blue}
+				onBlueChange={props.onBlueChange}
+			/>
+
+			{/* Integer Input */}
+			<IntegerInput
+				value={props.intColour}
+				onChange={props.onIntChange}
+			/>
+
+			{/* Hex Input */}
+			<HexInput value={props.hexColour} onChange={props.onHexChange} />
+		</div>
+	);
+}
+
+function Presets(props: {
+	presets: ArgbPreset[];
+	callbackFn: (preset: ArgbPreset, index: number) => ReactElement;
+}): ReactElement {
+	return (
+		<div>
+			<h2>Presets</h2>
+			{props.presets.map(props.callbackFn)}
+		</div>
+	);
+}
+
+const InitialColour: ArgbColour = {
+	alpha: 128,
+	red: 128,
+	green: 255,
+	blue: 128,
+};
+
+function ArgbToRgba(colour: ArgbColour): DataType.Color {
+	return `rgba(${colour.red}, ${colour.green}, ${colour.blue}, ${colour.alpha / 255
+		})`;
+}
+
+function ArgbToRgbaBackgroundColour(
+	colour: ArgbColour
+): Property.BackgroundColor {
+	return ArgbToRgba(colour);
+}
 
 function App() {
-	const [alpha, setAlpha] = useState(128);
-	const [red, setRed] = useState(128);
-	const [green, setGreen] = useState(255);
-	const [blue, setBlue] = useState(128);
-	const [intColor, setIntColor] = useState(0);
-	const [backgroundColor, setBackgroundColor] = useState("rgba(0,0,0,1)");
-	const [hexColor, setHexColor] = useState("#80808080");
+	const [alpha, setAlpha] = useState(InitialColour.alpha);
+	const [red, setRed] = useState(InitialColour.red);
+	const [green, setGreen] = useState(InitialColour.green);
+	const [blue, setBlue] = useState(InitialColour.blue);
+	const [intColour, setIntColour] = useState(
+		convertArgbToInt(
+			InitialColour.alpha,
+			InitialColour.red,
+			InitialColour.green,
+			InitialColour.blue
+		)
+	);
+	const [backgroundColor, setBackgroundColor] = useState(
+		ArgbToRgbaBackgroundColour(InitialColour)
+	);
+	const [hexColour, setHexColour] = useState(
+		convertArgbToHex(
+			InitialColour.alpha,
+			InitialColour.red,
+			InitialColour.green,
+			InitialColour.blue
+		)
+	);
 
 	useEffect(() => {
 		updateBackgroundColor();
@@ -20,11 +274,13 @@ function App() {
 		setBackgroundColor(rgbaColor);
 	}
 
-	function handleHexChange(e: { target: { value: string; }; }) {
+	function handleHexChange(e: ChangeEvent<HTMLInputElement>) {
 		const value = e.target.value.toUpperCase();
-		setHexColor(value);
+		setHexColour(value);
 
-		if (/^#?([A-F\d]{2})([A-F\d]{2})([A-F\d]{2})([A-F\d]{2})$/i.test(value)) {
+		if (
+			/^#?([A-F\d]{2})([A-F\d]{2})([A-F\d]{2})([A-F\d]{2})$/i.test(value)
+		) {
 			const argb = convertHexToArgb(value);
 			if (!argb) {
 				return;
@@ -34,16 +290,17 @@ function App() {
 			setGreen(argb.green);
 			setBlue(argb.blue);
 			updateBackgroundColor();
-			setIntColor(convertArgbToInt(argb.alpha, argb.red, argb.green, argb.blue));
+			setIntColour(
+				convertArgbToInt(argb.alpha, argb.red, argb.green, argb.blue)
+			);
 		}
 	}
 
-
 	function updateFromARGB() {
 		const hexValue = convertArgbToHex(alpha, red, green, blue);
-		setHexColor(hexValue);
+		setHexColour(hexValue);
 		const intValue = convertArgbToInt(alpha, red, green, blue);
-		setIntColor(intValue);
+		setIntColour(intValue);
 	}
 
 	function updateFromInt(intValue: number) {
@@ -53,14 +310,14 @@ function App() {
 		setGreen(green);
 		setBlue(blue);
 		const hexValue = convertArgbToHex(alpha, red, green, blue);
-		setHexColor(hexValue);
+		setHexColour(hexValue);
 	}
 
-	function handleIntChange(e: { target: { value: any; }; }) {
+	function handleIntChange(e: ChangeEvent<HTMLInputElement>) {
 		const value = e.target.value;
 		if (value === "") {
 			// Reset the color values when the input is empty
-			setIntColor(0);
+			setIntColour(0);
 			setAlpha(0);
 			setRed(0);
 			setGreen(0);
@@ -68,29 +325,35 @@ function App() {
 		} else {
 			const intValue = parseInt(value, 10);
 			if (!isNaN(intValue)) {
-				setIntColor(intValue);
+				setIntColour(intValue);
 				updateFromInt(intValue);
 			}
 		}
 	}
 
-	function handleAlphaChange(e: { target: { value: string; }; }) {
-		setAlpha(parseInt(e.target.value, 10));
-		updateFromARGB();
-	}
+	function handleChange(
+		color: "alpha" | "red" | "green" | "blue",
+		e: ChangeEvent<HTMLInputElement>
+	) {
+		const value = parseInt(e.target.value, 10);
 
-	function handleRedChange(e: { target: { value: string; }; }) {
-		setRed(parseInt(e.target.value, 10));
-		updateFromARGB();
-	}
+		switch (color) {
+			case "alpha":
+				setAlpha(value);
+				break;
+			case "red":
+				setRed(value);
+				break;
+			case "green":
+				setGreen(value);
+				break;
+			case "blue":
+				setBlue(value);
+				break;
+			default:
+				throw new Error("Invalid color channel");
+		}
 
-	function handleGreenChange(e: { target: { value: string; }; }) {
-		setGreen(parseInt(e.target.value, 10));
-		updateFromARGB();
-	}
-
-	function handleBlueChange(e: { target: { value: string; }; }) {
-		setBlue(parseInt(e.target.value, 10));
 		updateFromARGB();
 	}
 
@@ -116,19 +379,23 @@ function App() {
 		setGreen(preset.green);
 		setBlue(preset.blue);
 
-		setIntColor(convertArgbToInt(
-			preset.alpha,
-			preset.red,
-			preset.green,
-			preset.blue
-		));
+		setIntColour(
+			convertArgbToInt(
+				preset.alpha,
+				preset.red,
+				preset.green,
+				preset.blue
+			)
+		);
 
-		setHexColor(convertArgbToHex(
-			preset.alpha,
-			preset.red,
-			preset.green,
-			preset.blue
-		));
+		setHexColour(
+			convertArgbToHex(
+				preset.alpha,
+				preset.red,
+				preset.green,
+				preset.blue
+			)
+		);
 	}
 
 	function getColorStyle() {
@@ -140,20 +407,9 @@ function App() {
 			height: "20px",
 			display: "inline-block",
 			marginRight: "10px",
-			border: "1px solid black"
+			border: "1px solid black",
 		};
 	}
-
-	type ArgbColour = {
-		alpha: number;
-		red: number;
-		green: number;
-		blue: number;
-	};
-
-	type ArgbPreset = ArgbColour & {
-		name?: string;
-	};
 
 	function getColorOverlayStyle(preset: ArgbPreset) {
 		return {
@@ -161,139 +417,61 @@ function App() {
 			left: 0,
 			width: "100%",
 			height: "100%",
-			backgroundColor: `rgba(${preset.red}, ${preset.green}, ${preset.blue}, ${preset.alpha / 255})`,
+			backgroundColor: `rgba(${preset.red}, ${preset.green}, ${preset.blue
+				}, ${preset.alpha / 255})`,
 		};
 	}
 
+	function getPresetButton(): (
+		preset: ArgbPreset,
+		index: number
+	) => ReactElement {
+		return (preset, index) => (
+			<button
+				key={index}
+				onClick={() => applyPreset(preset)}
+				style={{
+					fontFamily: "monospace",
+					marginRight: "10px",
+					padding: "5px",
+					position: "relative",
+				}}
+			>
+				<div style={getColorStyle()}>
+					<div style={getColorOverlayStyle(preset)}></div>
+				</div>
+				{preset.name}
+			</button>
+		);
+	}
 
 	return (
 		<div>
-			<h1>ARGB Color Converter</h1>
-			<p>
-				Convert between integer and hexadecimal ARGB color values.
-				Useful for Android development.
-			</p>
-			<p>
-				For more details, see the{" "}
-				<a
-					href="https://developer.android.com/reference/android/graphics/Color"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					Android Color Documentation
-				</a>
-				.
-			</p>
-			<div
-				style={{
-					display: "flex",
-					justifyContent: "center",
-					alignItems: "center",
-					height: "150px",
-				}}
-			>
-				<div
-					style={{
-						background: `linear-gradient(45deg, #808080 25%, transparent 25%, transparent 75%, #808080 75%, #808080),linear-gradient(45deg, #808080 25%, transparent 25%, transparent 75%, #808080 75%, #808080)`,
-						backgroundSize: "20px 20px",
-						backgroundPosition: "0 0, 10px 10px",
-						width: "100px",
-						height: "100px",
-						border: "1px solid black",
-					}}
-				>
-					<div
-						style={{
-							width: "100%",
-							height: "100%",
-							backgroundColor: backgroundColor,
-						}}
-					></div>
-				</div>
-			</div>
-			<div>
-				<label>
-					Alpha:
-					<input
-						type="number"
-						value={alpha}
-						onChange={handleAlphaChange}
-						min="0"
-						max="255"
-					/>
-				</label>
-				<label>
-					Red:
-					<input
-						type="number"
-						value={red}
-						onChange={handleRedChange}
-						min="0"
-						max="255"
-					/>
-				</label>
-				<label>
-					Green:
-					<input
-						type="number"
-						value={green}
-						onChange={handleGreenChange}
-						min="0"
-						max="255"
-					/>
-				</label>
-				<label>
-					Blue:
-					<input
-						type="number"
-						value={blue}
-						onChange={handleBlueChange}
-						min="0"
-						max="255"
-					/>
-				</label>
-			</div>
-			<div>
-				<label>
-					Integer Color:
-					<input
-						type="number"
-						value={intColor}
-						onChange={handleIntChange}
-					/>
-				</label>
-			</div>
-			<div>
-				<label>
-					HEX Color:
-					<input
-						type="text"
-						value={hexColor}
-						onChange={handleHexChange}
-					/>
-				</label>
-			</div>
-
-			<div>
-				<h2>Presets</h2>
-				{presets.map((preset, index) => (
-					<button
-						key={index}
-						onClick={() => applyPreset(preset)}
-						style={{
-							fontFamily: "monospace",
-							marginRight: "10px",
-							padding: "5px",
-							position: "relative",
-						}}
-					>
-						<div style={getColorStyle()}>
-							<div style={getColorOverlayStyle(preset)}></div>
-						</div>
-						{preset.name}
-					</button>
-				))}
-			</div>
+			<Heading />
+			<Swatch backgroundColor={backgroundColor} />
+			<ColourControl
+				alpha={alpha}
+				onAlphaChange={(e: ChangeEvent<HTMLInputElement>) =>
+					handleChange("alpha", e)
+				}
+				red={red}
+				onRedChange={(e: ChangeEvent<HTMLInputElement>) =>
+					handleChange("red", e)
+				}
+				green={green}
+				onGreenChange={(e: ChangeEvent<HTMLInputElement>) =>
+					handleChange("green", e)
+				}
+				blue={blue}
+				onBlueChange={(e: ChangeEvent<HTMLInputElement>) =>
+					handleChange("blue", e)
+				}
+				intColour={intColour}
+				onIntChange={handleIntChange}
+				hexColour={hexColour}
+				onHexChange={handleHexChange}
+			/>
+			<Presets presets={presets} callbackFn={getPresetButton()} />
 		</div>
 	);
 }
@@ -322,16 +500,33 @@ function convertArgbToInt(
 	return ((alpha << 24) | (red << 16) | (green << 8) | blue) >>> 0;
 }
 
-function convertArgbToHex(alpha: number, red: number, green: number, blue: number) {
-	return '#' + [alpha, red, green, blue].map(x => x.toString(16).padStart(2, '0')).join('').toUpperCase();
+function convertArgbToHex(
+	alpha: number,
+	red: number,
+	green: number,
+	blue: number
+) {
+	return (
+		"#" +
+		[alpha, red, green, blue]
+			.map((x) => x.toString(16).padStart(2, "0"))
+			.join("")
+			.toUpperCase()
+	);
 }
 
-function convertHexToArgb(hex: string): { alpha: number; red: number; green: number; blue: number; } | null {
-	let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-	return result ? {
-		alpha: parseInt(result[1], 16),
-		red: parseInt(result[2], 16),
-		green: parseInt(result[3], 16),
-		blue: parseInt(result[4], 16)
-	} : null;
+function convertHexToArgb(
+	hex: string
+): { alpha: number; red: number; green: number; blue: number; } | null {
+	const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(
+		hex
+	);
+	return result
+		? {
+			alpha: parseInt(result[1], 16),
+			red: parseInt(result[2], 16),
+			green: parseInt(result[3], 16),
+			blue: parseInt(result[4], 16),
+		}
+		: null;
 }
