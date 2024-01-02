@@ -225,7 +225,18 @@ function Presets(props: {
 	return (
 		<div>
 			<h2>Presets</h2>
-			{props.presets.map(props.callbackFn)}
+			<div
+				style={{
+					width: "50%",
+					margin: "0 auto",
+					display: "flex",
+					flexWrap: "wrap",
+					justifyContent: "center",
+					alignItems: "center",
+				}}
+			>
+				{props.presets.map(props.callbackFn)}
+			</div>
 		</div>
 	);
 }
@@ -404,10 +415,13 @@ function App() {
 				key={index}
 				onClick={() => applyPreset(preset)}
 				style={{
+					margin: "5px",
 					fontFamily: "monospace",
-					marginRight: "10px",
 					padding: "5px",
 					position: "relative",
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center"
 				}}
 			>
 				<div style={getColourStyle()}>
