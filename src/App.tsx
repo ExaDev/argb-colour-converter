@@ -2,10 +2,10 @@ import { useState } from 'react';
 import './App.css';
 
 function App() {
-	const [alpha, setAlpha] = useState(255);
-	const [red, setRed] = useState(0);
-	const [green, setGreen] = useState(0);
-	const [blue, setBlue] = useState(0);
+	const [alpha, setAlpha] = useState(128);
+	const [red, setRed] = useState(128);
+	const [green, setGreen] = useState(255);
+	const [blue, setBlue] = useState(128);
 	const [intColor, setIntColor] = useState(0);
 
 	const updateFromARGB = () => {
